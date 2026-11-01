@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kiểm thử đăng nhập giáo viên – Thầy Tôn</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f6fb;margin:0;padding:24px;color:#172033}
+main{max-width:520px;margin:30px auto;background:#fff;padding:24px;border-radius:14px;box-shadow:0 6px 24px #17203318}
+h1{font-size:22px;margin-top:0}label{display:block;font-weight:600;margin:16px 0 6px}
+input{box-sizing:border-box;width:100%;padding:12px;border:1px solid #cbd2df;border-radius:8px;font-size:16px}
+button{margin-top:20px;padding:12px 18px;border:0;border-radius:8px;background:#2457d6;color:white;font-size:16px;font-weight:700;cursor:pointer}
+#result{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f4f9;padding:14px;border-radius:8px;margin-top:18px;min-height:42px}
+.note{color:#596579;font-size:14px;line-height:1.5}
+</style></head><body><main>
+<h1>Kiểm thử đăng nhập giáo viên</h1>
+<p class="note">Dùng tài khoản giáo viên vừa đăng ký. Không chia sẻ mật khẩu hoặc mã token.</p>
+<form id="loginForm">
+<label for="username">Tên đăng nhập</label><input id="username" autocomplete="username" required value="thayton_gdktpl_2026">
+<label for="password">Mật khẩu</label><input id="password" type="password" autocomplete="current-password" required>
+<button type="submit">Đăng nhập kiểm tra</button></form>
+<div id="result">Chưa kiểm tra.</div></main>
+<script>
+const API="https://thay-ton-api.2tonthatbao1905.workers.dev";
+const form=document.getElementById("loginForm"),result=document.getElementById("result");
+form.addEventListener("submit",async e=>{
+e.preventDefault();result.textContent="Đang kiểm tra đăng nhập...";
+try{
+const response=await fetch(API+"/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:document.getElementById("username").value.trim(),password:document.getElementById("password").value})});
+const data=await response.json();
+if(response.ok&&data.ok){result.textContent="ĐĂNG NHẬP THÀNH CÔNG – HTTP "+response.status+"\nTài khoản đã đăng nhập được vào hệ thống.\nPhản hồi:\n"+JSON.stringify({ok:data.ok,message:data.message,user:data.user},null,2);}
+else{result.textContent="ĐĂNG NHẬP CHƯA THÀNH CÔNG – HTTP "+response.status+"\n"+JSON.stringify(data,null,2);}
+}catch(err){result.textContent="Không kết nối được máy chủ: "+err.message;}
+});
+</script></body></html>
